@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block header_css %} {% endblock %}
+{% block header_js %} {% endblock %}
+
+{% block page_wrapper_contents %}
+    <div class="row">
+        <div class="col-md-4 col-sm-4">
+            <div class="card">
+                <div class="card-header card-header-primary">
+                    <h4 class="card-title badge badge-primary"><i class="material-icons">people_alt</i></h4>
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title">USERS</h1>
+                    <h1 class="card-text">{{ active_users }}/{{ users }}</h1>
+                </div>
+                <div class="card-footer text-muted">
+                    <div class="row no-gutters text-center">
+                        <div class="col-md-4 col-sm-4"><span class="badge badge-primary">SUPER ADMIN: {{ superadmin_type_count }}</span></div>
+                        <div class="col-md-4 col-sm-4"><span class="badge badge-info">ADMIN: {{ admin_type_count }}</span></div>
+                        <div class="col-md-4 col-sm-4"><span class="badge badge-default">USER: {{ user_type_count }}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-4">
+            <div class="card">
+                <div class="card-header card-header-primary">
+                    <h4 class="card-title badge badge-primary"><i class="material-icons">business</i></h4>
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title">BRANCHES</h1>
+                    <h1 class="card-text">{{ branches.actives.count }}/{{ branches.count }}</h1>
+                </div>
+                <div class="card-footer text-muted">
+                    <div class="row no-gutters text-center">
+                        <div class="col-md-4 col-sm-4"><span class="badge badge-warning">PENDING: {{ 0 }}</span></div>
+                        <div class="col-md-4 col-sm-4"><span class="badge badge-success">APPROVED: {{ 0 }}</span></div>
+                        <div class="col-md-4 col-sm-4"><span class="badge badge-danger">REJECTED: {{ 0 }}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-4"></div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+
+    <!-- Datatables -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.datatable').DataTable({
+                bFilter: false,
+                bLengthChange: false,
+                pageLength: 10,
+            });
+        });
+    </script>
+    <!-- /Datatables -->
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+        });
+    </script>
+{% endblock %}

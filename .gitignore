@@ -1,0 +1,9 @@
+**/migrations/*
+*.pyc
+.idea/
+.vscode/
+logs/
+venv/
+dream_cream_pastries_project/SECRET_KEY
+dream_cream_pastries_project/DEBUG
+dream_cream_pastries_project/ENV

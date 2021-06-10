@@ -1,0 +1,80 @@
+{% load static %}
+<div class="sidebar" data-color="blue">
+    <!--
+      Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red"
+  -->
+    <div class="sidebar-wrapper">
+        <ul class="nav">
+            <li class="{% if menu_subsection == 'admin_dashboard' %}active{% endif %}">
+                <a href="{% url 'admin_dashboard_home_view' %}">
+                    <i class="tim-icons icon-components"></i>
+                    <p>Dashboard</p>
+                </a>
+            </li>
+            <li class="{% if menu_subsection == 'account' %}active{% endif %}">
+                <a href="{% url 'admin_dashboard_accounts_list' %}">
+                    <i class="material-icons">people_alt</i>
+                    <p>Accounts</p>
+                </a>
+            </li>
+            <li class="{% if menu_subsection == 'branch' %}active{% endif %}">
+                <a href="{% url 'admin_dashboard_branches_list' %}">
+                    <i class="material-icons">business</i>
+                    <p>Branches</p>
+                </a>
+            </li>
+            <li>
+                <a data-toggle="collapse" href="#cake_menu" aria-expanded="false" aria-controls="cake_menu">
+                    <i class="material-icons">cakes</i>
+                    <p>Cakes</p>
+                </a>
+                <div class="collapse {% if menu_subsection == 'cake' or menu_subsection == 'cake_category' %}show{% endif %}"
+                     id="cake_menu">
+                    <ul class="nav">
+                        <li class="{% if menu_subsection == 'cake' %}active{% endif %}">
+                            <a href="{% url 'admin_dashboard_cakes_list' %}">
+                                <i class="material-icons">cake</i>
+                                <p>Cakes</p>
+                            </a>
+                        </li>
+                        <li class="{% if menu_subsection == 'cake_category' %}active{% endif %}">
+                            <a href="{% url 'admin_dashboard_cake_categories_list' %}">
+                                <i class="material-icons">category</i>
+                                <p>Category</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="{% if menu_subsection == 'employee' %}active{% endif %}">
+                <a href="{% url 'admin_dashboard_employees_list' %}">
+                    <i class="material-icons">badge</i>
+                    <p>Employees</p>
+                </a>
+            </li>
+            <li>
+                <a data-toggle="collapse" href="#menu_menu" aria-expanded="false" aria-controls="menu_menu">
+                    <i class="material-icons">menu_book</i>
+                    <p>Menu</p>
+                </a>
+                <div class="collapse {% if menu_subsection == 'menu' or menu_subsection == 'menu_category' %}show{% endif %}"
+                     id="menu_menu">
+                    <ul class="nav">
+                        <li class="{% if menu_subsection == 'menu' %}active{% endif %}">
+                            <a href="{% url 'admin_dashboard_menus_list' %}">
+                                <i class="material-icons">menu_open</i>
+                                <p>Menu List</p>
+                            </a>
+                        </li>
+                        <li class="{% if menu_subsection == 'menu_category' %}active{% endif %}">
+                            <a href="{% url 'admin_dashboard_menu_categories_list' %}">
+                                <i class="material-icons">category</i>
+                                <p>Category</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
