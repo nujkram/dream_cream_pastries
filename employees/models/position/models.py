@@ -1,8 +1,8 @@
 """
 Dream Cream Pastries Project
 Employee 0.0.1
-Employee models
-Employee
+Position models
+Position
 
 Author: Mark
 """
@@ -25,99 +25,56 @@ from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.contrib.postgres.fields import JSONField
 
-from .managers import EmployeeManager as manager
+from .managers import PositionManager as manager
 
 
-def file_upload_path(instance, filename):
-  return f'upload/{instance}/{filename}'
-
-
-class Employee(models.Model):
+class Position(models.Model):
     # === Basic ===
     created = models.DateTimeField(null=False, auto_now_add=True)
     updated = models.DateTimeField(null=False, auto_now=True)
 
     # === Identifiers ===
+    name = models.CharField(max_length=150)
     uuid = models.UUIDField(unique=True, default=uuid.uuid4, null=True, editable=True)
+    slug = extension_fields.AutoSlugField(populate_from='name', blank=True)
 
     # === Properties ===
-    first_name = models.CharField(max_length=150)
-    middle_name = models.CharField(max_length=150, blank=True, null=True)
-    last_name = models.CharField(max_length=150)
-    extension = models.CharField(max_length=150, blank=True, null=True)
-    address = models.CharField(max_length=150)
-    contact_number = models.CharField(max_length=150)
-    file = models.FileField(upload_to=file_upload_path, blank=True, null=True)
 
     # === State ===
     is_active = models.BooleanField(default=True)
     meta = JSONField(default=dict, blank=True, null=True)
 
     # === Relationship Fields ===
-    branch = models.ForeignKey(
-        'branches.Branch',
-        null=True,
-        db_index=False,
-        on_delete=models.SET_NULL,
-        related_name='employees_branch'
-    )
-    position = models.ForeignKey(
-        'employees.Position',
-        null=True,
-        db_index=False,
-        on_delete=models.SET_NULL,
-        related_name='employees_position'
-    )
-    region = models.ForeignKey(
-        'locations.Region',
-        null=True,
-        db_index=False,
-        on_delete=models.SET_NULL,
-        related_name='employees_region'
-    )
-    province = models.ForeignKey(
-        'locations.Province',
-        null=True,
-        db_index=False,
-        on_delete=models.SET_NULL,
-        related_name='employees_province'
-    )
-    city = models.ForeignKey(
-        'locations.City',
-        null=True,
-        db_index=False,
-        on_delete=models.SET_NULL,
-        related_name='employees_city'
-    )
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         null=True,
         db_index=False,
         on_delete=models.SET_NULL,
-        related_name='employees_created_by_user'
+        related_name='positions_created_by_user'
     )
     last_updated_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         null=True,
         db_index=False,
         on_delete=models.SET_NULL,
-        related_name='employees_updated_by_user'
+        related_name='positions_updated_by_user'
     )
 
     objects = manager()
 
     class Meta:
         ordering = ('-created',)
-        verbose_name = 'Employee'
-        verbose_name_plural = 'Employees'
-    
+        verbose_name = 'Position'
+        verbose_name_plural = 'Positions'
+
     ################################################################################
     # === Magic Methods ===
     ################################################################################
     def __str__(self):
-        return self.get_full_name()
+        return self.name
 
-    ################################################################################
+        ################################################################################
+
     # === Model overrides ===
     ################################################################################
     def clean(self, *args, **kwargs):
@@ -131,35 +88,16 @@ class Employee(models.Model):
     ################################################################################
     # === Model-specific methods ===
     ################################################################################
-    def get_casual_name(self):
-        if self.first_name != '':
-            return self.first_name
-        return 'Unnamed'
 
-    def get_name(self):
-        if self.first_name != '' and self.last_name != '':
-            return '{} {}'.format(
-                self.first_name, self.last_name
-            )
-        else:
-            return 'Unnamed'
-
-    def get_full_name(self):
-        if self.first_name != '' and self.last_name != '':
-            return '{}, {}'.format(
-                self.last_name, self.first_name
-            )
-        else:
-            return 'Unnamed'
 
 ################################################################################
 # === Signals ===
 ################################################################################
-@receiver(post_save, sender=Employee)
+@receiver(post_save, sender=Position)
 def scaffold_post_save(sender, instance=None, created=False, **kwargs):
     pass
 
 
-@receiver(pre_save, sender=Employee)
+@receiver(pre_save, sender=Position)
 def scaffold_pre_save(sender, instance=None, created=False, **kwargs):
     pass

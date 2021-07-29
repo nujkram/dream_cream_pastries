@@ -6,6 +6,7 @@ from admin_dashboard.controllers.views.admin_dashboard.cakes import main as cake
 from admin_dashboard.controllers.views.admin_dashboard.cake_categories import main as cake_categories_views
 from admin_dashboard.controllers.views.admin_dashboard.cake_images import main as cake_images_views
 from admin_dashboard.controllers.views.admin_dashboard.employees import main as employees_views
+from admin_dashboard.controllers.views.admin_dashboard.positions import main as positions_views
 from admin_dashboard.controllers.views.admin_dashboard.menus import main as menus_views
 from admin_dashboard.controllers.views.admin_dashboard.menu_categories import main as menu_categories_views
 
@@ -200,6 +201,36 @@ urlpatterns += [
         'employee/<employee>/delete',
         employees_views.AdminDashboardEmployeeDeleteView.as_view(),
         name='admin_dashboard_employees_delete'
+    )
+]
+
+# Position
+
+urlpatterns += [
+    path(
+        'position/list',
+        positions_views.AdminDashboardPositionListView.as_view(),
+        name='admin_dashboard_positions_list'
+    ),
+    path(
+        'position/<position>/detail',
+        positions_views.AdminDashboardPositionDetailView.as_view(),
+        name='admin_dashboard_positions_detail'
+    ),
+    path(
+        'position/create',
+        positions_views.AdminDashboardPositionCreateView.as_view(),
+        name='admin_dashboard_positions_create'
+    ),
+    path(
+        'position/<position>/update',
+        positions_views.AdminDashboardPositionUpdateView.as_view(),
+        name='admin_dashboard_positions_update'
+    ),
+    path(
+        'position/<position>/delete',
+        positions_views.AdminDashboardPositionDeleteView.as_view(),
+        name='admin_dashboard_positions_delete'
     )
 ]
 
