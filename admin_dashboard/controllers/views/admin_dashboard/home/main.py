@@ -1,6 +1,6 @@
 """
-Ninja Tribe Project
-Description for Ninja Tribe Project
+Dream Cream Pastries Project
+Description for Dream Cream Pastries Project
 
 Author: Mark Jun Gersaniva (markjungersaniva@gmail.com)
 Version: 0.0.1

@@ -31,7 +31,7 @@ from .managers import CakeImageManager as manager
 def upload_path(instance, filename):
     ext = filename.split('.')[-1]
     filename = "{}.{}".format(uuid.uuid4(), ext)
-    return 'uploads/profile_photos/{}'.format(
+    return 'uploads/cakes/{}'.format(
         filename
     )
 

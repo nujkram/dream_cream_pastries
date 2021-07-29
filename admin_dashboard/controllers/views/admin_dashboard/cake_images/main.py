@@ -8,7 +8,7 @@ Version: 0.0.1
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views import View
 from django.core.paginator import Paginator
@@ -16,6 +16,7 @@ from django.forms import modelformset_factory
 
 from accounts.mixins.user_type_mixins import IsAdminViewMixin
 
+from cakes.models.cake import Cake
 from cakes.models.cake_image.models import CakeImage as Master
 from admin_dashboard.controllers.views.admin_dashboard.cake_images.forms import CakeImageForm as MasterForm
 
@@ -109,64 +110,65 @@ class AdminDashboardCakeImageCreateView(LoginRequiredMixin, IsAdminViewMixin, Vi
     """
 
     def get(self, request, *args, **kwargs):
-        form = MasterForm
         form = ImageFormSet(queryset=Master.objects.none())
-
+        cake = Cake.objects.get(id=kwargs.get('cake'))
         context = {
             "page_title": "Create new Cake Image",
             "menu_section": "admin_dashboard",
             "menu_subsection": "cake_image",
             "menu_action": "create",
             "form": form,
+            "cake": cake,
         }
 
         return render(request, "cake_images/form.html", context)
 
     def post(self, request, *args, **kwargs):
-        form = MasterForm(data=request.POST)
         form_set = ImageFormSet(request.POST, request.FILES, queryset=Master.objects.none())
+        cake = Cake.objects.get(id=kwargs.get('cake'))
+        flag = 0
 
-        if form.is_valid():
-            data = form.save(commit=False)
-            data.created_by = request.user
-            data.save()
-
+        if form_set.is_valid():
             for image_data in form_set.cleaned_data:
                 if image_data:
                     image = image_data['image']
                     name = image.name
-                    cake_image = Master(name=name, image=image, cake=data.pk)
+                    cake_image = Master(name=name, image=image, cake=cake)
                     cake_image.save()
+                    flag = 1
+                    messages.success(
+                        request,
+                        f'{cake_image} saved!',
+                        extra_tags='success'
+                    )
+                else:
+                    flag = 0
 
-            messages.success(
-                request,
-                f'{data} saved!',
-                extra_tags='success'
-            )
-
-            return HttpResponseRedirect(
-                reverse(
-                    'admin_dashboard_cake_images_detail',
-                    kwargs={
-                        'cake_image': data.pk
-                    }
+                if flag:
+                    continue
+                else:
+                    messages.error(
+                        request,
+                        form_set.errors,
+                        extra_tags='danger'
+                    )
+                    return HttpResponseRedirect(reverse('admin_dashboard_cake_images_create', kwargs={'cake': cake.id}))
+            if flag:
+                return HttpResponseRedirect(
+                    reverse(
+                        'admin_dashboard_cake_images_detail',
+                        kwargs={
+                            'cake_image': cake_image.pk
+                        }
+                    )
                 )
-            )
         else:
-            context = {
-                "page_title": "Create new Cake Image",
-                "menu_section": "admin_dashboard",
-                "menu_subsection": "cake_image",
-                "menu_action": "create",
-                "form": form
-            }
-
             messages.error(
                 request,
                 'There were errors processing your request:',
                 extra_tags='danger'
             )
-            return render(request, "cake_images/form.html", context)
+            return HttpResponseRedirect(reverse('admin_dashboard_cake_images_create', kwargs={'cake': cake.id}))
 
 
 class AdminDashboardCakeImageDetailView(LoginRequiredMixin, IsAdminViewMixin, View):

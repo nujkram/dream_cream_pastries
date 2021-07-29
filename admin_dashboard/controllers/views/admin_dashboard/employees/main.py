@@ -149,7 +149,7 @@ class AdminDashboardEmployeeCreateView(LoginRequiredMixin, IsAdminViewMixin, Vie
 
             messages.error(
                 request,
-                'There were errors processing your request:',
+                form.errors,
                 extra_tags='danger'
             )
             return render(request, "employees/form.html", context)
