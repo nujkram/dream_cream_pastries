@@ -18,6 +18,9 @@
                     <li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
                 </ol>
             </nav>
+            {% if messages %} {% for m in messages %}
+                <div class="alert alert-{{ m.tags }}">{{ m }}</div>
+            {% endfor %} {% endif %}
         </div>
     </div>
 
@@ -25,12 +28,16 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-category">{{ obj.created }}</h5>
-                    <h2 class="card-title">{{ page_title }} Detail</h2>
+                    <h5 class="card-category">&nbsp;</h5>
+                    <h2 class="card-title">{{ obj.get_full_name }}</h2>
                 </div>
                 <div class="card-body">
-                    <h4 class="card-title">{{ obj.name }}</h4>
-                    <h6 class="card-subtitle mb-2 text-muted">Name</h6>
+                    <h4 class="card-title">{{ obj.branch }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Branch</h6>
+                    <h4 class="card-title">{{ obj.address }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Address</h6>
+                    <h4 class="card-title">{{ obj.contact_number }}</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">Contact Number</h6>
                 </div>
             </div>
         </div>

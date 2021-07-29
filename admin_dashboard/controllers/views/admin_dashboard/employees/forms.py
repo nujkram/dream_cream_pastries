@@ -17,4 +17,5 @@ class EmployeeForm(forms.ModelForm):
             'province',
             'city',
             'branch',
+            'position',
         ]

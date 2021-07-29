@@ -6,17 +6,36 @@
 {% block header_js %} {% endblock %}
 
 {% block page_wrapper_contents %}
+    <div class="card mb-3">
+        <div class="card-header">
+            <h4 class="card-title">{{ page_title }} ({{ cake.name }})</h4>
+        </div>
+        <div class="card-body">
+            <nav aria-label="breadcrumb" role="navigation">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'admin_dashboard_home_view' %}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'admin_dashboard_cakes_list' %}">Cakes</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'admin_dashboard_cakes_detail' cake.id %}">{{ cake.name }}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
     <div class="row">
         <div class="col">
             <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">{{ page_title }}</h2>
-                </div>
                 <div class="card-body">
-                    <form method="post" enctype="multipart/form-data">
+                    {% if messages %} {% for m in messages %}
+                        <div class="alert alert-{{ m.tags }}">{{ m }}</div>
+                    {% endfor %} {% endif %}
+                    <form method="post" enctype="multipart/form-data"
+                          action="{% url 'admin_dashboard_cake_images_create' cake.id %}">
                         {% csrf_token %}
-
-                        {% crispy form %}
+                        {{ form.management_form }}
+                        {% for image in form %}
+                            {{ image }}
+                            <br>
+                        {% endfor %}
                         <p>
                             <button type="submit" class="btn btn-success animation-on-hover">
                                 Submit

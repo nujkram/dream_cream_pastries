@@ -15,48 +15,48 @@ from django.core.paginator import Paginator
 
 from accounts.mixins.user_type_mixins import IsAdminViewMixin
 
-from accounts.models.account.models import Account as Master
-from admin_dashboard.controllers.views.admin_dashboard.accounts.forms import AccountForm as MasterForm
+from employees.models.position.models import Position as Master
+from admin_dashboard.controllers.views.admin_dashboard.positions.forms import PositionForm as MasterForm
 
 """
 URLS
-# Account
+# Position
 
-from admin_dashboard.controllers.views.admin_dashboard.accounts import main as accounts_views
+from admin_dashboard.controllers.views.admin_dashboard.positions import main as positions_views
 
 urlpatterns += [
     path(
-        'account/list',
-        accounts_views.AdminDashboardAccountListView.as_view(),
-        name='admin_dashboard_accounts_list'
+        'position/list',
+        positions_views.AdminDashboardPositionListView.as_view(),
+        name='admin_dashboard_positions_list'
     ),
     path(
-        'account/<account>/detail',
-        accounts_views.AdminDashboardAccountDetailView.as_view(),
-        name='admin_dashboard_accounts_detail'
+        'position/<position>/detail',
+        positions_views.AdminDashboardPositionDetailView.as_view(),
+        name='admin_dashboard_positions_detail'
     ),
     path(
-        'account/create',
-        accounts_views.AdminDashboardAccountCreateView.as_view(),
-        name='admin_dashboard_accounts_create'
+        'position/create',
+        positions_views.AdminDashboardPositionCreateView.as_view(),
+        name='admin_dashboard_positions_create'
     ),
     path(
-        'account/<account>/update',
-        accounts_views.AdminDashboardAccountUpdateView.as_view(),
-        name='admin_dashboard_accounts_update'
+        'position/<position>/update',
+        positions_views.AdminDashboardPositionUpdateView.as_view(),
+        name='admin_dashboard_positions_update'
     ),
     path(
-        'account/<account>/delete',
-        accounts_views.AdminDashboardAccountDeleteView.as_view(),
-        name='admin_dashboard_accounts_delete'
+        'position/<position>/delete',
+        positions_views.AdminDashboardPositionDeleteView.as_view(),
+        name='admin_dashboard_positions_delete'
     )
 ]
 """
 
 
-class AdminDashboardAccountListView(LoginRequiredMixin, IsAdminViewMixin, View):
+class AdminDashboardPositionListView(LoginRequiredMixin, IsAdminViewMixin, View):
     """ 
-    List view for Accounts. 
+    List view for Positions. 
     
     Allowed HTTP verbs: 
         - GET
@@ -77,20 +77,20 @@ class AdminDashboardAccountListView(LoginRequiredMixin, IsAdminViewMixin, View):
         objs = paginator.get_page(page)
 
         context = {
-            "page_title": f"Accounts",
+            "page_title": f"Positions",
             "menu_section": "admin_dashboard",
-            "menu_subsection": "account",
+            "menu_subsection": "position",
             "menu_action": "list",
             "paginator": paginator,
             "objects": objs
         }
 
-        return render(request, "accounts/list.html", context)
+        return render(request, "positions/list.html", context)
 
 
-class AdminDashboardAccountCreateView(LoginRequiredMixin, IsAdminViewMixin, View):
+class AdminDashboardPositionCreateView(LoginRequiredMixin, IsAdminViewMixin, View):
     """ 
-    Create view for Accounts. 
+    Create view for Positions. 
     
     Allowed HTTP verbs: 
         - GET
@@ -108,24 +108,20 @@ class AdminDashboardAccountCreateView(LoginRequiredMixin, IsAdminViewMixin, View
     def get(self, request, *args, **kwargs):
         form = MasterForm
         context = {
-            "page_title": "Create new Account",
+            "page_title": "Create new Position",
             "menu_section": "admin_dashboard",
-            "menu_subsection": "account",
+            "menu_subsection": "position",
             "menu_action": "create",
             "form": form
         }
 
-        return render(request, "accounts/form.html", context)
+        return render(request, "positions/form.html", context)
     
     def post(self, request, *args, **kwargs):
         form = MasterForm(data=request.POST)
 
         if form.is_valid():
             data = form.save(commit=False)
-
-            if data.user_type == 'ADM':
-                data.is_admin = True
-
             data.created_by = request.user
             data.save()
             messages.success(
@@ -136,17 +132,17 @@ class AdminDashboardAccountCreateView(LoginRequiredMixin, IsAdminViewMixin, View
 
             return HttpResponseRedirect(
                 reverse(
-                    'admin_dashboard_accounts_detail',
+                    'admin_dashboard_positions_detail',
                     kwargs={
-                        'account': data.pk
+                        'position': data.pk
                     }
                 )
             )
         else:
             context = {
-                "page_title": "Create new Account",
+                "page_title": "Create new Position",
                 "menu_section": "admin_dashboard",
-                "menu_subsection": "account",
+                "menu_subsection": "position",
                 "menu_action": "create",
                 "form": form
             }
@@ -156,12 +152,12 @@ class AdminDashboardAccountCreateView(LoginRequiredMixin, IsAdminViewMixin, View
                 'There were errors processing your request:',
                 extra_tags='danger'
             )
-            return render(request, "accounts/form.html", context)
+            return render(request, "positions/form.html", context)
 
 
-class AdminDashboardAccountDetailView(LoginRequiredMixin, IsAdminViewMixin, View):
+class AdminDashboardPositionDetailView(LoginRequiredMixin, IsAdminViewMixin, View):
     """ 
-    Create view for Accounts. 
+    Create view for Positions. 
     
     Allowed HTTP verbs: 
         - GET
@@ -175,21 +171,21 @@ class AdminDashboardAccountDetailView(LoginRequiredMixin, IsAdminViewMixin, View
     """
 
     def get(self, request, *args, **kwargs):
-        obj = get_object_or_404(Master, pk=kwargs.get('account', None))
+        obj = get_object_or_404(Master, pk=kwargs.get('position', None))
         context = {
-            "page_title": f"Account: {obj}",
+            "page_title": f"Position: {obj}",
             "menu_section": "admin_dashboard",
-            "menu_subsection": "account",
+            "menu_subsection": "position",
             "menu_action": "detail",
             "obj": obj
         }
 
-        return render(request, "accounts/detail.html", context)
+        return render(request, "positions/detail.html", context)
 
 
-class AdminDashboardAccountUpdateView(LoginRequiredMixin, IsAdminViewMixin, View):
+class AdminDashboardPositionUpdateView(LoginRequiredMixin, IsAdminViewMixin, View):
     """ 
-    Create view for Accounts. 
+    Create view for Positions. 
     
     Allowed HTTP verbs: 
         - GET
@@ -204,30 +200,26 @@ class AdminDashboardAccountUpdateView(LoginRequiredMixin, IsAdminViewMixin, View
     """
 
     def get(self, request, *args, **kwargs):
-        obj = get_object_or_404(Master, pk=kwargs.get('account', None))
+        obj = get_object_or_404(Master, pk=kwargs.get('position', None))
         form = MasterForm(instance=obj)
 
         context = {
-            "page_title": f"Update Account: {obj}",
+            "page_title": f"Update Position: {obj}",
             "menu_section": "admin_dashboard",
-            "menu_subsection": "account",
+            "menu_subsection": "position",
             "menu_action": "update",
             "obj": obj,
             "form": form
         }
 
-        return render(request, "accounts/form.html", context)
+        return render(request, "positions/form.html", context)
     
     def post(self, request, *args, **kwargs):
-        obj = get_object_or_404(Master, pk=kwargs.get('account', None))
+        obj = get_object_or_404(Master, pk=kwargs.get('position', None))
         form = MasterForm(instance=obj, data=request.POST)
 
         if form.is_valid():
             data = form.save(commit=False)
-
-            if data.user_type == 'ADM':
-                data.is_admin = True
-
             data.updated_by = request.user
             data = form.save()
             messages.success(
@@ -238,17 +230,17 @@ class AdminDashboardAccountUpdateView(LoginRequiredMixin, IsAdminViewMixin, View
 
             return HttpResponseRedirect(
                 reverse(
-                    'admin_dashboard_accounts_detail',
+                    'admin_dashboard_positions_detail',
                     kwargs={
-                        'account': data.pk
+                        'position': data.pk
                     }
                 )
             )
         else:
             context = {
-                "page_title": "Update Account: {obj}",
+                "page_title": "Update Position: {obj}",
                 "menu_section": "admin_dashboard",
-                "menu_subsection": "account",
+                "menu_subsection": "position",
                 "menu_action": "update",
                 "obj": obj,
                 "form": form
@@ -259,12 +251,12 @@ class AdminDashboardAccountUpdateView(LoginRequiredMixin, IsAdminViewMixin, View
                 'There were errors processing your request:',
                 extra_tags='danger'
             )
-            return render(request, "accounts/form.html", context)
+            return render(request, "positions/form.html", context)
 
 
-class AdminDashboardAccountDeleteView(LoginRequiredMixin, IsAdminViewMixin, View):
+class AdminDashboardPositionDeleteView(LoginRequiredMixin, IsAdminViewMixin, View):
     """ 
-    Create view for Accounts. 
+    Create view for Positions. 
     
     Allowed HTTP verbs: 
         - GET
@@ -279,19 +271,19 @@ class AdminDashboardAccountDeleteView(LoginRequiredMixin, IsAdminViewMixin, View
     """
 
     def get(self, request, *args, **kwargs):
-        obj = get_object_or_404(Master, pk=kwargs.get('account', None))
+        obj = get_object_or_404(Master, pk=kwargs.get('position', None))
         context = {
-            "page_title": "Delete Account: {obj}",
+            "page_title": "Delete Position: {obj}",
             "menu_section": "admin_dashboard",
-            "menu_subsection": "account",
+            "menu_subsection": "position",
             "menu_action": "delete",
             "obj": obj
         }
 
-        return render(request, "accounts/delete.html", context)
+        return render(request, "positions/delete.html", context)
     
     def post(self, request, *args, **kwargs):
-        obj = get_object_or_404(Master, pk=kwargs.get('account', None))
+        obj = get_object_or_404(Master, pk=kwargs.get('position', None))
 
         messages.success(
             request,
@@ -303,6 +295,6 @@ class AdminDashboardAccountDeleteView(LoginRequiredMixin, IsAdminViewMixin, View
 
         return HttpResponseRedirect(
             reverse(
-                'admin_dashboard_accounts_list'
+                'admin_dashboard_positions_list'
             )
         )
