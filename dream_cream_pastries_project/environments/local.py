@@ -264,7 +264,7 @@ STATICFILES_DIRS = [
 STATIC_URL = f'/static/'
 STATIC_ROOT = '/var/www/html/static/'
 
-MEDIA_URL = f'media/'
+MEDIA_URL = f'/media/'
 MEDIA_ROOT = '/var/www/html/media/'
 TEMPORARY_MEDIA = '{}temp'.format(MEDIA_ROOT)
 
